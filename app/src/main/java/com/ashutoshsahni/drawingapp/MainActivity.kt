@@ -3,16 +3,29 @@ package com.ashutoshsahni.drawingapp
 import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.view.get
 
 class MainActivity : AppCompatActivity() {
 
     private var drawingView : DrawingView? = null
+    private var mImageButtonColorPaint : ImageButton? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val linearLayoutColorPalette = findViewById<LinearLayout>(R.id.ll_color_palette)
+
+        mImageButtonColorPaint = linearLayoutColorPalette[1] as ImageButton
+        mImageButtonColorPaint!!.setImageDrawable(
+            ContextCompat.getDrawable(this, R.drawable.palette_selected)
+        )
 
         drawingView = findViewById(R.id.drawing_view)
         drawingView?.setBrushSize(20.toFloat())
@@ -48,6 +61,24 @@ class MainActivity : AppCompatActivity() {
         }
 
         brushDialog.show()
+    }
+
+    fun paintClicked(view : View) {
+        if(view !== mImageButtonColorPaint) {
+            val imageButton = view as ImageButton
+            val imageButtonTag = imageButton.tag.toString()
+            drawingView?.setColor(imageButtonTag)
+
+            imageButton.setImageDrawable(
+                ContextCompat.getDrawable(this, R.drawable.palette_selected)
+            )
+
+            mImageButtonColorPaint?.setImageDrawable(
+                ContextCompat.getDrawable(this, R.drawable.palette_normal)
+            )
+
+            mImageButtonColorPaint = view
+        }
     }
 
 }
